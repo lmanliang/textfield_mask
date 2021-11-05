@@ -18,7 +18,8 @@ class _MyAppState extends State<MyApp> {
   @override
   initState(){
     tc.text = 'default value';
-    textmask.set(TextField(controller:tc));
+    textmask.setField(TextField(controller:tc));
+    textmask.setDir('left');
   }
   Widget build(BuildContext context) {
     return MaterialApp(
