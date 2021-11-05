@@ -4,7 +4,8 @@ class TextFieldMask extends StatefulWidget {
   TextField inputField = TextField();
   String defaultText = '';
   String text = '';
-  late String directionality;
+  String directionality = 'right';
+  bool deleteValue = false;
 
 
   TextFieldMask({Key? key}){
@@ -25,6 +26,9 @@ class TextFieldMask extends StatefulWidget {
   }
   setDir(String directionality){
     this.directionality = directionality;
+  }
+  setValueMethod(bool delete){
+    this.deleteValue = delete;
   }
 }
 
@@ -121,7 +125,9 @@ class _TextFieldMaskState extends State<TextFieldMask> {
             child: (fakeTextField),
             onTap: () {
               ontap = true;
-
+              if ( widget.deleteValue == true){
+                widget.inputField.controller!.text = '';
+              }
               setState(() {});
             },
           )

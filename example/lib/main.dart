@@ -20,6 +20,7 @@ class _MyAppState extends State<MyApp> {
     tc.text = 'default value';
     textmask.setField(TextField(controller:tc));
     textmask.setDir('left');
+    textmask.setValueMethod(false);
   }
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -33,7 +34,7 @@ class _MyAppState extends State<MyApp> {
           ],
         ),
         body: Center(
-          child: textmask,
+          child: Container( width: 200 , child:Card(child:textmask)),
         ),
       ),
     );
