@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flip_card/flip_card.dart';
+
 
 class TextFieldMask extends StatefulWidget {
   TextField inputField = TextField();
@@ -7,9 +9,8 @@ class TextFieldMask extends StatefulWidget {
   String directionality = 'right';
   bool deleteValue = false;
 
-
-  TextFieldMask({Key? key}){
-     //super(key: key);
+  TextFieldMask({Key? key}) {
+    //super(key: key);
   }
 
   @override
@@ -24,15 +25,21 @@ class TextFieldMask extends StatefulWidget {
     print(
         'this is here default value' + tc.controller!.text + ':' + defaultText);
   }
-  setDir(String directionality){
+
+  setDir(String directionality) {
     this.directionality = directionality;
   }
-  setValueMethod(bool delete){
+
+  setValueMethod(bool delete) {
     this.deleteValue = delete;
+  }
+  getValue(){
+    return inputField.controller!.text;
   }
 }
 
-class _TextFieldMaskState extends State<TextFieldMask> {
+class _TextFieldMaskState extends State<TextFieldMask>
+    with SingleTickerProviderStateMixin {
   //TextEditingController tc = TextEditingController();
   TextField fakeTextField = TextField();
   TextEditingController fakeTc = TextEditingController();
@@ -41,25 +48,23 @@ class _TextFieldMaskState extends State<TextFieldMask> {
 
   maskedString(String text) {
     var rev = text.split('').reversed.toList();
-    switch(widget.directionality) {
+    switch (widget.directionality) {
       case 'right':
         for (int i = 0; i < (rev.length / 2).toInt(); i++) {
           rev[i] = '*';
         }
         break;
       case 'left':
-        for (int i = rev.length -1; i > (rev.length / 2).toInt(); i--) {
+        for (int i = rev.length - 1; i > (rev.length / 2).toInt(); i--) {
           rev[i] = '*';
         }
         break;
     }
     return rev.reversed.toList().join();
-
   }
 
   @override
   void initState() {
-    print(widget.directionality);
     fakeTextField = TextField(
         controller: fakeTc,
         focusNode: widget.inputField.focusNode,
@@ -115,22 +120,36 @@ class _TextFieldMaskState extends State<TextFieldMask> {
         enableIMEPersonalizedLearning:
             widget.inputField.enableIMEPersonalizedLearning);
     fakeTc.text = maskedString(widget.inputField.controller!.text.toString());
+    if (widget.deleteValue == true){
+      widget.inputField.controller!.text = '';
+    }
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    return FlipCard(
+      fill: Fill.fillBack, // Fill the back side of the card to make in the same size as the front.
+      direction: FlipDirection.HORIZONTAL, // default
+      front: fakeTextField,
+      back: widget.inputField,
+      );
+  }
+  /*
+  Widget build(BuildContext context) {
     return ontap == false
         ? GestureDetector(
-            child: (fakeTextField),
-            onTap: () {
-              ontap = true;
-              if ( widget.deleteValue == true){
-                widget.inputField.controller!.text = '';
-              }
-              setState(() {});
-            },
-          )
+      child: (fakeTextField),
+      onTap: () async {
+        ontap = true;
+        if (widget.deleteValue == true) {
+          widget.inputField.controller!.text = '';
+        }
+        setState(() {});
+      },
+    )
         : widget.inputField;
   }
+
+   */
 }
