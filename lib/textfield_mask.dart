@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flip_card/flip_card.dart';
 
-
 class TextFieldMask extends StatefulWidget {
   TextField inputField = TextField();
   String defaultText = '';
@@ -9,8 +8,13 @@ class TextFieldMask extends StatefulWidget {
   String directionality = 'right';
   bool deleteValue = false;
 
-  TextFieldMask({Key? key}) {
-    //super(key: key);
+  //late GlobalKey key;
+  FocusNode _commentFocus = FocusNode();
+
+  TextFieldMask({FocusNode? fource = null}) {
+    if (fource != null) {
+      _commentFocus = fource;
+    }
   }
 
   @override
@@ -33,17 +37,17 @@ class TextFieldMask extends StatefulWidget {
   setValueMethod(bool delete) {
     this.deleteValue = delete;
   }
-  getValue(){
+
+  getValue() {
     return inputField.controller!.text;
   }
 }
 
 class _TextFieldMaskState extends State<TextFieldMask>
     with SingleTickerProviderStateMixin {
-  //TextEditingController tc = TextEditingController();
   TextField fakeTextField = TextField();
   TextEditingController fakeTc = TextEditingController();
-  FocusNode _commentFocus = FocusNode();
+
   bool ontap = false;
 
   maskedString(String text) {
@@ -120,7 +124,7 @@ class _TextFieldMaskState extends State<TextFieldMask>
         enableIMEPersonalizedLearning:
             widget.inputField.enableIMEPersonalizedLearning);
     fakeTc.text = maskedString(widget.inputField.controller!.text.toString());
-    if (widget.deleteValue == true){
+    if (widget.deleteValue == true) {
       widget.inputField.controller!.text = '';
     }
     super.initState();
@@ -129,13 +133,17 @@ class _TextFieldMaskState extends State<TextFieldMask>
   @override
   Widget build(BuildContext context) {
     return FlipCard(
-      fill: Fill.fillBack, // Fill the back side of the card to make in the same size as the front.
-      direction: FlipDirection.HORIZONTAL, // default
-      front: fakeTextField,
-      back: widget.inputField,
-      );
+        fill: Fill.fillBack,
+        // Fill the back side of the card to make in the same size as the front.
+        direction: FlipDirection.HORIZONTAL,
+        // default
+        front: fakeTextField,
+        back: widget.inputField,
+        onFlipDone: (status) {
+          if (widget._commentFocus != null) widget._commentFocus.requestFocus();
+        });
   }
-  /*
+/*
   Widget build(BuildContext context) {
     return ontap == false
         ? GestureDetector(
